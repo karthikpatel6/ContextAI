@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database.connection import create_tables
+from routers.auth import router as auth_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -8,6 +9,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="WhatsApp AI",lifespan=lifespan)
+
+app.include_router(auth_router)
 
 @app.get('/')
 async def root():

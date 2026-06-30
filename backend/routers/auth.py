@@ -3,12 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from database.connection import get_db
 from models.user import User
-from schemas.user import UserRegister
+from schemas.user import UserRegister, UserResponse
 from core.security import hash_password
 
 router  = APIRouter(prefix="/auth",tags=["Authentication"])
 
-@router.post("/register")
+@router.post("/register", response_model=UserResponse)
 async def register(payload: UserRegister,db : AsyncSession = Depends(get_db)):
     # for username validation
     result = await db.execute(select(User).where(User.username == payload.username))
@@ -30,3 +30,5 @@ async def register(payload: UserRegister,db : AsyncSession = Depends(get_db)):
     db.add(user)
     await db.commit()
     await db.refresh(user)
+    
+    return user
