@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL","postgresql+asyncpg://postgres:password@localhost:5432/whatsapp_ai")
+DATABASE_URL = os.getenv("DATABASE_URL","postgresql+asyncpg://postgres:password@localhost:5432/contextai")
 
 engine = create_async_engine(
     DATABASE_URL,
@@ -33,6 +33,8 @@ async def get_db():
         finally:
             await session.close()    
 
-# async def create_tables():
-#     async with engine.begin() as conn:
-#         from backend.models
+
+async def create_tables():
+    async with engine.begin() as conn:
+        from models import user
+        await conn.run_sync(Base.metadata.create_all)

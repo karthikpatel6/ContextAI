@@ -2,3 +2,6 @@ fastapi
 sqlalchemy #ORM to interact with DB using Python classes instead of raw SQL
 asyncpg  #async PostgreSQL driver (FastAPI is async, so we need async DB too)
 python-dotenv 
+asyncpg
+"passlib[bcrypt]"
+pydantic[email]
