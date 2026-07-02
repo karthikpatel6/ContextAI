@@ -15,4 +15,5 @@ class User(Base):
     bio : Mapped[str | None] = mapped_column(Text,nullable=True)
     is_online : Mapped[bool] = mapped_column(Boolean,default=False)
     last_seen : Mapped[DateTime | None] = mapped_column(DateTime(timezone=True),nullable=True)
-    created_at : Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at : Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now()) 
+    
