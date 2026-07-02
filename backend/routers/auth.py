@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from database.connection import get_db
 from models.user import User
-from schemas.user import UserRegister, UserResponse
-from core.security import hash_password
+from schemas.user import UserRegister, UserResponse, TokenResponse, UserLogin
+from core.security import hash_password, create_access_token, verify_password
 
 router  = APIRouter(prefix="/auth",tags=["Authentication"])
 
@@ -32,3 +32,17 @@ async def register(payload: UserRegister,db : AsyncSession = Depends(get_db)):
     await db.refresh(user)
     
     return user
+
+@router.post("/login", response_model=TokenResponse)
+async def login(payload: UserLogin, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.username == payload.username))
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=401,detail="Invalid username or password")
+    if not verify_password(payload.password,user.hashed_password):
+        raise HTTPException(status_code=401,detail="Invalid username or password")
+    
+    token = create_access_token({"sub": user.id})
+    return TokenResponse(access_token=token,user=UserResponse.model_validate(user))
+     
+
