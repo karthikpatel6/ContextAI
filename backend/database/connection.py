@@ -36,5 +36,5 @@ async def get_db():
 
 async def create_tables():
     async with engine.begin() as conn:
-        from models import user
+        from models import user, chat, message
         await conn.run_sync(Base.metadata.create_all)
