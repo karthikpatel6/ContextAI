@@ -6,3 +6,6 @@ asyncpg
 "passlib[bcrypt]"
 pydantic[email]
 "python-jose[cryptography]"
+langchain-groq
+langgraph
+tavily-python
