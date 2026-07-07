@@ -14,14 +14,14 @@ import operator
 load_dotenv()
 
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
+    model="qwen/qwen3.6-27b", 
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.7,
 )
 
 tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
-@tool
+@tool   
 def web_search(query: str) -> str:
     """Search the web for current information."""
     results = tavily_client.search(query=query, max_results=3)
@@ -77,4 +77,14 @@ async def run_agent(query: str, chat_history: list = []) -> str:
         "messages": [system, *chat_history, user_message]
     })
 
-    return result["messages"][-1].content
+    last_message = result["messages"][-1]
+
+    if hasattr(last_message, "content") and last_message.content:
+        return last_message.content
+    
+    if isinstance(last_message.content, list):
+        for block in last_message.content:
+            if isinstance(block, dict) and block.get("type") == "text":
+                return block.get("text", "")
+
+    return "I couldn't generate a response. Please try again."

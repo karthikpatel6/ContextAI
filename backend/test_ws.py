@@ -11,10 +11,13 @@ async def test():
     async with websockets.connect(uri) as ws:
         print("Connected!")
 
-        await ws.send(json.dumps({"content": "Hello from Websocket!"}))
+        await ws.send(json.dumps({"content": "@ai what is the latest news in AI today?"}))
         print("Message sent!")
 
-        response = await ws.recv()
-        print("Recevied:", response)
+        response1 = await ws.recv()
+        print("Broadcast:", response1)
+
+        response2 = await ws.recv()
+        print("AI Response:", response2)
 
 asyncio.run(test())

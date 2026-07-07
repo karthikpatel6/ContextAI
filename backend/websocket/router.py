@@ -55,22 +55,11 @@ async def worksocket_endpoint(websocket: WebSocket, chat_id: str,token: str):
                 query = data.get("content", "")[3:].strip()
                 ai_response = await run_agent(query)
 
-                async with AsyncSessionLocal() as db:
-                    ai_message = Message(
-                        chat_id=chat_id,
-                        sender_id="ai-assistant",
-                        content=ai_response,
-                        is_ai_command=False,
-                    )
-                    db.add(ai_message)
-                    await db.commit()
-                    await db.refresh(ai_message)
-
                 await manager.broadcast(chat_id, {
                     "sender_id": "ai-assistant",
                     "username": "AI Assistant",
                     "content": ai_response,
-                    "created_at": ai_message.created_at.isoformat() if ai_message.created_at else None,
+                    "created_at": None,
                 })
 
     except WebSocketDisconnect:
