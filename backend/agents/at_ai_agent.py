@@ -42,3 +42,39 @@ def agent_node(state: AgentState):
     return {"messages": [response]}
 
 tool_node = ToolNode(tools)
+
+def should_continue(state: AgentState):
+    last_message = state["messages"][-1]
+    if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+        return "tools"
+    return END
+
+graph = StateGraph(AgentState)
+
+graph.add_node("agent", agent_node)
+graph.add_node("tools", tool_node)
+
+graph.set_entry_point("agent")
+
+graph.add_conditional_edges(
+    "agent",
+    should_continue,
+    {"tools": "tools", END: END}
+)
+
+graph.add_edge("tools", "agent")
+
+agent = graph.compile()
+
+async def run_agent(query: str, chat_history: list = []) -> str:
+    system = SystemMessage(content="""You are an AI assistant inside a chat app.
+                           You help users with questions, web searches, and tasks.
+                           Be concise and friendly. Format responses clearly.""")
+    
+    user_message = HumanMessage(content=query)
+
+    result = await agent.ainvoke({
+        "messages": [system, *chat_history, user_message]
+    })
+
+    return result["messages"][-1].content
