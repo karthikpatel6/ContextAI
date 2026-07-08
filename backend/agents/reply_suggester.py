@@ -93,7 +93,3 @@ Only return the JSON, nothing else.
         "revival_message": revival_message,
     }
 
-
-        
-
-
