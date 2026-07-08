@@ -11,7 +11,7 @@ async def test():
     async with websockets.connect(uri) as ws:
         print("Connected!")
 
-        await ws.send(json.dumps({"content": "@ai send email to voddam.karthik.sot2428@pwioi.com with subject Test and body Hello this is a test from WhatsApp AI"}))
+        await ws.send(json.dumps({"content": "@ai send email to karthikkpatel06@gmail.com with subject Test and body Hello this is a test from WhatsApp AI"}))
         print("Message sent!")
 
         response1 = await ws.recv()
