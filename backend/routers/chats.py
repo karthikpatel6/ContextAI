@@ -6,6 +6,7 @@ from models.chat import Chat, ChatMember
 from models.user import User
 from core.dependencies import get_current_user
 from schemas.user import ChatResponse, CreateDirectChat
+from schemas.chat import MessageResponse
 
 router = APIRouter(prefix="/chats",tags=["Chats"])
 
@@ -32,3 +33,46 @@ async def create_direct_chat(
     await db.commit()
     await db.refresh(chat)
     return ChatResponse.model_validate(chat)
+
+@router.get("/", response_model=list[ChatResponse])
+async def get_my_chats(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(
+        select(Chat)
+        .join(ChatMember, Chat.id == ChatMember.chat_id)
+        .where(ChatMember.user_id == current_user.id)
+        .order_by(Chat.created_at.desc())
+    )
+    chats = result.scalars().all()
+    return [ChatResponse.model_validate(c) for c in chats]
+
+
+@router.get("/{chat_id}/messages", response_model=list[MessageResponse])
+async def get_messages(
+    chat_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(
+        select(ChatMember)
+        .where(
+            and_(ChatMember.chat_id == chat_id, ChatMember.user_id == current_user.id)
+        )
+    )
+
+    if not result.scalar_one_or_none():
+        raise HTTPException(status_code=403, detail="Not a member of this chat")
+    
+    from models.message import Message
+    result = await db.execute(
+        select(Message)
+        .where(Message.chat_id == chat_id)
+        .order_by(Message.created_at.asc())
+        .limit(50)
+    )
+    messages = result.scalars().all()
+    return [MessageResponse.model_validate(m) for m in messages]
+    
+
