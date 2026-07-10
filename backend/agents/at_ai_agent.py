@@ -94,6 +94,23 @@ graph.add_edge("tools", "agent")
 
 agent = graph.compile()
 
+async def run_agent_stream(query: str, callback):
+    """Stream agent response token by token via callback."""
+    system = SystemMessage(content="""You are an AI assistant inside a chat app.
+You help users with questions, web searches, and tasks.
+Be concise and friendly. Format responses clearly.""")
+    
+    user_message = HumanMessage(content=query)
+    
+    full_response = ""
+    async for chunk in llm.astream([system, user_message]):
+        token = chunk.content
+        if token:
+            full_response += token
+            await callback(token)
+    
+    return full_response
+
 async def run_agent(query: str, chat_history: list = []) -> str:
     system = SystemMessage(content="""You are an AI assistant inside a chat app.
                            You help users with questions, web searches, and tasks.
