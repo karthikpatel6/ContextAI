@@ -3,15 +3,15 @@ import websockets
 import json
 
 async def test():
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZjhiM2I4ZS0xMGRiLTQxZTMtYjJlNC01MDY4MzQ3M2Y1NmQiLCJleHAiOjE3ODM5MzYyMDZ9.zM0AiqxR97adAB6ljRErSepZhM8ejdQrqs8ncC7DEEA"
-    chat_id = "fbafbc54-454d-4bd5-9fec-5ca9a7b63915"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzZkOTI5OC1jZjhmLTQyMGItYjQ2Zi05Mzg4NTcyYjNiNGUiLCJleHAiOjE3ODQzNzQyMTB9.rQrDYUKBNdh6a5PtwR1hi7Qr3rFK4iOAKXUUliIgBzs"
+    chat_id = "a12bb13c-f26c-4b66-8db0-1f5c021723ff"
 
     uri = f"ws://127.0.0.1:8000/ws/{chat_id}?token={token}"
 
     async with websockets.connect(uri) as ws:
         print("Connected!")
 
-        await ws.send(json.dumps({"content": "@ai send email to karthikkpatel06@gmail.com with subject Test and body Hello this is a test from WhatsApp AI"}))
+        await ws.send(json.dumps({"content": "@ai what is the latest news in AI today?"}))
         print("Message sent!")
 
         response1 = await ws.recv()

@@ -17,7 +17,7 @@ from email.mime.multipart import MIMEMultipart
 load_dotenv()
 
 llm = ChatGroq(
-    model="qwen/qwen3.6-27b", 
+    model="qwen/qwen3.6-27b",
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.7,
 )
@@ -94,7 +94,7 @@ graph.add_edge("tools", "agent")
 
 agent = graph.compile()
 
-async def run_agent_stream(query: str, callback):
+async def run_agent_stream(query: str, callback) -> str:
     """Stream agent response token by token via callback."""
     system = SystemMessage(content="""You are an AI assistant inside a chat app.
 You help users with questions, web searches, and tasks.
