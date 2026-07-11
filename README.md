@@ -86,3 +86,17 @@ Open `http://localhost` in your browser.
 ```
 
 ## 🗂️ Project Structure
+ContextAI/
+├── backend/
+│   ├── main.py
+│   ├── routers/          # auth, users, chats, ai
+│   ├── websocket/        # connection manager + router
+│   ├── agents/           # LangGraph agents
+│   ├── models/           # SQLAlchemy models
+│   ├── schemas/          # Pydantic schemas
+│   └── core/             # security, dependencies
+├── frontend/
+│   └── src/
+│       ├── pages/        # Login, Register, Chat
+│       └── components/   # Sidebar, ChatWindow, etc.
+└── docker-compose.yml
