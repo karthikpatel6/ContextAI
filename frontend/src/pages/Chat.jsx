@@ -179,20 +179,24 @@ const sendMessage = (content) => {
           <>
             <div className="chat-header">
               <div className="chat-header-info">
-                <div className="avatar">{selectedChat.id.charAt(0).toUpperCase()}</div>
-                <div>
-                  <p className="chat-header-name">Chat {selectedChat.id.slice(0, 8)}...</p>
-                  <p className="chat-header-status">Active now</p>
+                <div className="avatar">
+                  {selectedChat.contact?.full_name?.charAt(0).toUpperCase() || '✦'}
                 </div>
-              </div>
-              <button
-                className="suggest-btn"
-                onClick={fetchSuggestions}
-                title="Get AI reply suggestions"
-              >
-                ✦ Suggest Reply
-              </button>
-            </div>
+              <div>
+            <p className="chat-header-name">
+              {selectedChat.contact?.full_name || `Chat ${selectedChat.id.slice(0, 8)}...`}
+            </p>
+            <p className="chat-header-status">Active now</p>
+          </div>
+        </div>
+      <button
+        className="suggest-btn"
+        onClick={fetchSuggestions}
+        title="Get AI reply suggestions"
+      >
+        ✦ Suggest Reply
+      </button>
+    </div>
 
             <ChatWindow messages={messages} isTyping={isTyping} typingUserId={typingUserId} />
 

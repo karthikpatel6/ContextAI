@@ -7,7 +7,6 @@ export default function Sidebar({ chats, selectedChat, onSelectChat, onNewChat }
   const { user, logout } = useAuth()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
-  const [searching, setSearching] = useState(false)
 
   const handleSearch = async (e) => {
     const q = e.target.value
@@ -24,10 +23,11 @@ export default function Sidebar({ chats, selectedChat, onSelectChat, onNewChat }
     }
   }
 
-  const startChat = async (targetUserId) => {
+  const startChat = async (targetUser) => {
     try {
-      const res = await api.post('/chats/direct', { target_user_id: targetUserId })
-      onNewChat(res.data)
+      const res = await api.post('/chats/direct', { target_user_id: targetUser.id })
+      const chatWithContact = { ...res.data, contact: targetUser }
+      onNewChat(chatWithContact)
       setSearchQuery('')
       setSearchResults([])
     } catch (err) {
@@ -63,7 +63,7 @@ export default function Sidebar({ chats, selectedChat, onSelectChat, onNewChat }
         <div className="search-results">
           <p className="search-label">Start a new chat</p>
           {searchResults.map(u => (
-            <div key={u.id} className="search-result-item" onClick={() => startChat(u.id)}>
+            <div key={u.id} className="search-result-item" onClick={() => startChat(u)}>
               <div className="avatar avatar-sm">{getInitial(u.full_name)}</div>
               <div>
                 <p className="result-name">{u.full_name}</p>
@@ -88,10 +88,16 @@ export default function Sidebar({ chats, selectedChat, onSelectChat, onNewChat }
             className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''}`}
             onClick={() => onSelectChat(chat)}
           >
-            <div className="avatar">C</div>
+            <div className="avatar">
+              {getInitial(chat.contact?.full_name || 'C')}
+            </div>
             <div className="chat-item-info">
-              <p className="chat-item-name">Chat {chat.id.slice(0, 8)}...</p>
-              <p className="chat-item-preview">Click to open</p>
+              <p className="chat-item-name">
+                {chat.contact?.full_name || `Chat ${chat.id.slice(0, 8)}...`}
+              </p>
+              <p className="chat-item-preview">
+                @{chat.contact?.username || 'unknown'}
+              </p>
             </div>
           </div>
         ))}
