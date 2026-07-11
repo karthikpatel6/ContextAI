@@ -86,6 +86,7 @@ Open `http://localhost` in your browser.
 ```
 
 ## 🗂️ Project Structure
+```
 ContextAI/
 ├── backend/
 │   ├── main.py
@@ -100,3 +101,4 @@ ContextAI/
 │       ├── pages/        # Login, Register, Chat
 │       └── components/   # Sidebar, ChatWindow, etc.
 └── docker-compose.yml
+```
