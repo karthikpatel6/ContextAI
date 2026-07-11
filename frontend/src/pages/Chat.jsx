@@ -66,7 +66,7 @@ export default function Chat() {
     wsRef.current.close()
   }
   
-  const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${chatId}?token=${token}`)
+  const ws = new WebSocket(`ws://localhost:8000/ws/${chatId}?token=${token}`)
 
   ws.onopen = () => {
     console.log('WebSocket connected')

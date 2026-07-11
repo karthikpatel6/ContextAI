@@ -17,7 +17,11 @@ app = FastAPI(title="WhatsApp AI",lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",  # Vite dev server
+        "http://localhost",       # Docker nginx (port 80)
+        "http://localhost:80",    # Docker nginx explicit port
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
