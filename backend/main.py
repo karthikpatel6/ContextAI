@@ -4,9 +4,18 @@ from database.connection import create_tables
 from routers.auth import router as auth_router
 from routers.users import router as users_router
 from routers.chats import router as chats_router
-from websocket.router import router as ws_router
+from ws.router import router as ws_router
 from routers.ai import router as ai_router
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# LangSmith observability
+os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "true")
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY", "")
+os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "ContextAI")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

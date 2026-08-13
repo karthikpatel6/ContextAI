@@ -45,7 +45,46 @@ export default function Chat() {
   const fetchChats = async () => {
     try {
       const res = await api.get('/chats/')
-      setChats(res.data)
+      const rawChats = res.data || []
+
+      // Enrich chats with contact info when possible
+      const enrichChat = async (chat) => {
+        // If contact already present, keep it
+        if (chat.contact) return chat
+
+        // Try to infer other participant from recent messages
+        try {
+          const msgsRes = await api.get(`/chats/${chat.id}/messages`)
+          const msgs = msgsRes.data || []
+          const otherMsg = msgs.find(m => String(m.sender_id) !== String(user?.id))
+          const otherId = otherMsg?.sender_id
+          if (otherId) {
+            try {
+              const userRes = await api.get(`/users/${otherId}`)
+              return { ...chat, contact: userRes.data }
+            } catch (err) {
+              // ignore and fallback
+            }
+          }
+        } catch (err) {
+          // ignore message fetch errors
+        }
+
+        // Fallback: if created_by is not current user, use that
+        try {
+          if (chat.created_by && String(chat.created_by) !== String(user?.id)) {
+            const userRes = await api.get(`/users/${chat.created_by}`)
+            return { ...chat, contact: userRes.data }
+          }
+        } catch (err) {
+          // ignore
+        }
+
+        return chat
+      }
+
+      const enriched = await Promise.all(rawChats.map(enrichChat))
+      setChats(enriched)
     } catch (err) {
       if (err.response?.status === 401) logout()
     }
@@ -54,7 +93,25 @@ export default function Chat() {
   const fetchMessages = async (chatId) => {
     try {
       const res = await api.get(`/chats/${chatId}/messages`)
-      setMessages(res.data)
+      const msgs = res.data || []
+      setMessages(msgs)
+
+      // If selectedChat exists and doesn't have contact info, try to infer and update
+      if (selectedChat && !selectedChat.contact) {
+        const otherMsg = msgs.find(m => String(m.sender_id) !== String(user?.id))
+        const otherId = otherMsg?.sender_id || (selectedChat.created_by && String(selectedChat.created_by) !== String(user?.id) ? selectedChat.created_by : null)
+        if (otherId) {
+          try {
+            const userRes = await api.get(`/users/${otherId}`)
+            const contact = userRes.data
+            // update chats list and selectedChat
+            setChats(prev => prev.map(c => c.id === selectedChat.id ? { ...c, contact } : c))
+            setSelectedChat(prev => prev ? { ...prev, contact } : prev)
+          } catch (err) {
+            // ignore
+          }
+        }
+      }
     } catch (err) {
       console.error(err)
     }

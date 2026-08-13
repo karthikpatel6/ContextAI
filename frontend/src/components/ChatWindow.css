@@ -49,22 +49,26 @@
   display: flex;
   flex-direction: column;
   max-width: 70%;
+  margin-bottom: 10px;
 }
 
 .message-wrapper.me {
   align-self: flex-end;
   align-items: flex-end;
+  margin-left: auto;  /* pushes to right */
 }
 
 .message-wrapper.them {
   align-self: flex-start;
   align-items: flex-start;
+  margin-right: auto;  /* stays on left */
 }
 
 .message-wrapper.ai {
   align-self: flex-start;
   align-items: flex-start;
   max-width: 80%;
+  margin-right: auto;
 }
 
 .ai-badge {
@@ -76,15 +80,19 @@
 }
 
 .message-bubble {
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: 16px;
   position: relative;
+  display: inline-block; /* shrink to content like WhatsApp */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
 .bubble-me {
   background: #7c5cfc;
   color: #fff;
   border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 16px;
+  border-top-right-radius: 6px;
 }
 
 .bubble-them {
@@ -92,6 +100,7 @@
   color: #e8e8f0;
   border-bottom-left-radius: 4px;
   border: 1px solid #2a2a3d;
+  border-bottom-right-radius: 16px;
 }
 
 .bubble-ai {
@@ -99,6 +108,7 @@
   color: #e8e8f0;
   border-bottom-left-radius: 4px;
   border: 1px solid #3a2a6a;
+  border-bottom-right-radius: 16px;
 }
 
 .message-content {
@@ -111,10 +121,30 @@
 .message-time {
   font-size: 10px;
   opacity: 0.6;
-  margin-top: 4px;
+  margin-top: 6px;
   display: block;
   text-align: right;
 }
+
+/* Align time for other users to left inside their bubble */
+.message-wrapper.them .message-time,
+.message-wrapper.ai .message-time { text-align: left; }
+
+/* Slight spacing between AI badge and bubble like WhatsApp */
+.ai-badge {
+  font-size: 11px;
+  color: #bda6ff;
+  font-weight: 700;
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+/* Typing bubble follows left alignment for others */
+.typing-bubble { padding: 10px 14px; }
+
+/* Ensure scrollbar area remains subtle */
+.chat-window::-webkit-scrollbar { width: 6px; }
+.chat-window::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 4px; }
 
 .typing-bubble {
   display: flex;

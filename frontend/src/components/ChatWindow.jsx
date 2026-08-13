@@ -16,8 +16,9 @@ export default function ChatWindow({ messages, isTyping, typingUserId }) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 
-  const isMe = (senderId) => senderId === user?.id
-  const isAI = (senderId) => senderId === 'ai-assistant'
+  // Normalize id comparisons to avoid string/number mismatches
+  const isMe = (senderId) => String(senderId) === String(user?.id)
+  const isAI = (senderId) => String(senderId) === 'ai-assistant'
   const shouldShowTyping = Boolean(isTyping && typingUserId && typingUserId !== user?.id)
 
   return (
@@ -30,20 +31,24 @@ export default function ChatWindow({ messages, isTyping, typingUserId }) {
         </div>
       )}
 
-      {messages.map((msg, i) => (
-        <div
-          key={msg.id || i}
-          className={`message-wrapper ${isMe(msg.sender_id) ? 'me' : isAI(msg.sender_id) ? 'ai' : 'them'}`}
-        >
-          {isAI(msg.sender_id) && (
-            <div className="ai-badge">✦ AI</div>
-          )}
-          <div className={`message-bubble ${isMe(msg.sender_id) ? 'bubble-me' : isAI(msg.sender_id) ? 'bubble-ai' : 'bubble-them'}`}>
-            <p className="message-content">{msg.content}</p>
-            <span className="message-time">{formatTime(msg.created_at)}</span>
+      {messages.map((msg, i) => {
+        const me = isMe(msg.sender_id)
+        const ai = isAI(msg.sender_id)
+        return (
+          <div
+            key={msg.id || i}
+            className={`message-wrapper ${me ? 'me' : ai ? 'ai' : 'them'}`}
+          >
+            {ai && (
+              <div className="ai-badge">✦ AI</div>
+            )}
+            <div className={`message-bubble ${me ? 'bubble-me' : ai ? 'bubble-ai' : 'bubble-them'}`}>
+              <p className="message-content">{msg.content}</p>
+              <span className="message-time">{formatTime(msg.created_at)}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
 
       {shouldShowTyping && (
         <div className="message-wrapper them">

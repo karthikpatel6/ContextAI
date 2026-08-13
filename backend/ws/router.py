@@ -1,5 +1,5 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from websocket.manager import manager
+from ws.manager import manager
 from jose import jwt, JWTError
 from models.message import Message
 from database.connection import AsyncSessionLocal
