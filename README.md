@@ -1,5 +1,7 @@
 # ContextAI — WhatsApp-like Chat App with Embedded AI Agents
 
+[![CI](https://github.com/karthikpatel6/ContextAI/actions/workflows/ci.yml/badge.svg)](https://github.com/karthikpatel6/ContextAI/actions/workflows/ci.yml)
+
 A production-grade real-time chat application with embedded AI capabilities, built with FastAPI, LangGraph, WebSockets, PostgreSQL, and React.
 
 ## ✨ Features
@@ -38,6 +40,7 @@ A production-grade real-time chat application with embedded AI capabilities, bui
 | Web Search | Tavily |
 | Frontend | React + Vite |
 | Container | Docker + Docker Compose |
+| Observability | LangSmith |
 
 ## 🚀 Quick Start
 
@@ -50,7 +53,7 @@ A production-grade real-time chat application with embedded AI capabilities, bui
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/ContextAI
+git clone https://github.com/karthikpatel6/ContextAI
 cd ContextAI
 cp backend/.env.example backend/.env
 # Fill in your API keys in backend/.env
