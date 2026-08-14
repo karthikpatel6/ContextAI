@@ -30,7 +30,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost",
         "http://localhost:80",
-        "https://contextai.vercel.app",  # add your Vercel URL (we'll get this soon)
+        "https://context-ai-six.vercel.app",
         "https://contextai-backend-aoy4.onrender.com",
     ],
     allow_credentials=True,
