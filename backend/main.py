@@ -47,3 +47,6 @@ app.include_router(ai_router)
 async def root():
     return {"message": "WhatsApp AI is Running"}
 
+@app.get('/health')
+async def health():
+    return {"status": "healthy"}
