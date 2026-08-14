@@ -123,7 +123,7 @@ export default function Chat() {
     wsRef.current.close()
   }
   
-  const ws = new WebSocket(`ws://localhost:8000/ws/${chatId}?token=${token}`)
+  const ws = new WebSocket(`wss://contextai-backend-aoy4.onrender.com/ws/${chatId}?token=${token}`)
 
   ws.onopen = () => {
     console.log('WebSocket connected')
