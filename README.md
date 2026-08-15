@@ -1,14 +1,21 @@
 # ContextAI — WhatsApp-like Chat App with Embedded AI Agents
 
 [![CI](https://github.com/karthikpatel6/ContextAI/actions/workflows/ci.yml/badge.svg)](https://github.com/karthikpatel6/ContextAI/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://context-ai-six.vercel.app)
+
+> Built as a portfolio project demonstrating production-grade agentic AI engineering — LangGraph orchestration, real-time WebSockets, and full-stack deployment.
 
 A production-grade real-time chat application with embedded AI capabilities, built with FastAPI, LangGraph, WebSockets, PostgreSQL, and React.
+
+🔗 **Live Demo:** [context-ai-six.vercel.app](https://context-ai-six.vercel.app)
+
+---
 
 ## ✨ Features
 
 ### 💬 Real-time Chat
 - WebSocket-based messaging with instant delivery
-- Online/offline status and typing indicators
+- Typing indicators and online/offline status
 - Message history with PostgreSQL persistence
 - User search and direct chat creation
 
@@ -26,6 +33,10 @@ A production-grade real-time chat application with embedded AI capabilities, bui
 - JWT authentication with bcrypt password hashing
 - Async PostgreSQL with SQLAlchemy
 - Dockerized with 3 containers (postgres, backend, frontend)
+- LangSmith observability for all LLM traces
+- Deployed on Render + Vercel + Supabase
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -41,13 +52,16 @@ A production-grade real-time chat application with embedded AI capabilities, bui
 | Frontend | React + Vite |
 | Container | Docker + Docker Compose |
 | Observability | LangSmith |
+| Deployment | Render + Vercel + Supabase |
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Docker + Docker Compose
-- Groq API key (free at console.groq.com)
-- Tavily API key (free at app.tavily.com)
+- Groq API key (free at [console.groq.com](https://console.groq.com))
+- Tavily API key (free at [app.tavily.com](https://app.tavily.com))
 - Gmail App Password (for email tool)
 
 ### Setup
@@ -62,6 +76,8 @@ docker-compose up --build
 
 Open `http://localhost` in your browser.
 
+---
+
 ## 📡 API Endpoints
 
 | Method | Endpoint | Description |
@@ -74,6 +90,8 @@ Open `http://localhost` in your browser.
 | GET | `/chats/{id}/messages` | Get message history |
 | POST | `/ai/suggest-replies` | Get AI reply suggestions |
 | WS | `/ws/{chat_id}?token=` | WebSocket connection |
+
+---
 
 ## 🔌 WebSocket Events
 
@@ -88,20 +106,61 @@ Open `http://localhost` in your browser.
 { "type": "typing", "is_typing": true }
 ```
 
+---
+
 ## 🗂️ Project Structure
+
 ```
 ContextAI/
 ├── backend/
-│   ├── main.py
-│   ├── routers/          # auth, users, chats, ai
-│   ├── websocket/        # connection manager + router
-│   ├── agents/           # LangGraph agents
-│   ├── models/           # SQLAlchemy models
-│   ├── schemas/          # Pydantic schemas
-│   └── core/             # security, dependencies
+│   ├── main.py                    # FastAPI app entry point
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── .env.example
+│   ├── routers/                   # auth, users, chats, ai
+│   ├── ws/                        # WebSocket connection manager + router
+│   ├── agents/                    # LangGraph agents
+│   │   ├── at_ai_agent.py         # @ai command agent
+│   │   └── reply_suggester.py     # Reply suggestion agent
+│   ├── models/                    # SQLAlchemy models
+│   ├── schemas/                   # Pydantic schemas
+│   ├── core/                      # security, dependencies
+│   └── database/                  # DB connection + session
 ├── frontend/
+│   ├── Dockerfile
+│   ├── nginx.conf
 │   └── src/
-│       ├── pages/        # Login, Register, Chat
-│       └── components/   # Sidebar, ChatWindow, etc.
-└── docker-compose.yml
+│       ├── api/                   # Axios client
+│       ├── context/               # Auth context
+│       ├── pages/                 # Login, Register, Chat
+│       └── components/            # Sidebar, ChatWindow, etc.
+├── docker-compose.yml
+├── .gitignore
+└── README.md
 ```
+
+---
+
+## 🌐 Deployment
+
+| Service | Platform |
+|---------|----------|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | Supabase (PostgreSQL) |
+
+---
+
+## 📸 Screenshots
+
+> *Add screenshots or demo GIF here*
+
+---
+
+## 🔮 Roadmap
+
+- [ ] Sentiment analysis agent
+- [ ] Long-term RAG memory over chat history
+- [ ] Group chat support
+- [ ] Google Calendar integration
+- [ ] Dedicated AI Chat mode
